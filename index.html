@@ -4,72 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pull-to-Toggle Lamp</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #1e2a32;
-      transition: background-color 0.5s;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .bulb {
-      width: 100px;
-      height: 150px;
-      background-color: transparent;
-      border: 5px solid #888;
-      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-      position: relative;
-      box-shadow: none;
-      transition: all 0.4s ease;
-    }
-
-    .bulb.on {
-      background-color: #f6ff9e;
-      box-shadow: 0 0 60px #ffff99;
-      border-color: #ccc;
-    }
-
-    .socket {
-      width: 40px;
-      height: 30px;
-      background-color: #777;
-      position: absolute;
-      bottom: -25px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-radius: 6px;
-    }
-
-    .string {
-      width: 4px;
-      background: #aaa;
-      position: relative;
-      cursor: grab;
-      transition: height 0.2s;
-    }
-
-    .knob {
-      width: 16px;
-      height: 16px;
-      background: #555;
-      border-radius: 50%;
-      position: absolute;
-      left: -6px;
-    }
-
-    body.day {
-      background-color: #fbe3a9;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
@@ -81,47 +16,6 @@
     </div>
   </div>
 
-  <script>
-    const bulb = document.getElementById('bulb');
-    const body = document.body;
-    const string = document.getElementById('string');
-    const knob = document.getElementById('knob');
-
-    let isDragging = false;
-    let startY = 0;
-    let maxPull = 80; // px
-    let isOn = false;
-
-    string.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      startY = e.clientY;
-      document.body.style.cursor = 'grabbing';
-    });
-
-    window.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      const dy = e.clientY - startY;
-      const pull = Math.min(Math.max(dy, 0), maxPull);
-      string.style.height = 120 + pull + "px";
-      knob.style.bottom = -8 - pull + "px";
-    });
-
-    window.addEventListener('mouseup', (e) => {
-      if (!isDragging) return;
-      isDragging = false;
-      document.body.style.cursor = 'default';
-
-      const dy = e.clientY - startY;
-      if (dy > 50) {
-        isOn = !isOn;
-        bulb.classList.toggle('on', isOn);
-        body.classList.toggle('day', isOn);
-      }
-
-      // Reset string
-      string.style.height = "120px";
-      knob.style.bottom = "-8px";
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
