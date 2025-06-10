@@ -3,68 +3,125 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pull String Lamp</title>
+  <title>Pull-to-Toggle Lamp</title>
   <style>
     body {
       margin: 0;
-      background: #111;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      flex-direction: column;
+      background-color: #1e2a32;
+      transition: background-color 0.5s;
     }
 
-    .lamp {
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .bulb {
       width: 100px;
       height: 150px;
-      background: #333;
-      border-radius: 50% 50% 20% 20%;
+      background-color: transparent;
+      border: 5px solid #888;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
       position: relative;
-      box-shadow: 0 0 60px rgba(255, 255, 200, 0); /* Glow off */
-      transition: box-shadow 0.3s;
+      box-shadow: none;
+      transition: all 0.4s ease;
     }
 
-    .lamp.on {
-      box-shadow: 0 0 80px rgba(255, 255, 180, 0.7); /* Glow on */
+    .bulb.on {
+      background-color: #f6ff9e;
+      box-shadow: 0 0 60px #ffff99;
+      border-color: #ccc;
+    }
+
+    .socket {
+      width: 40px;
+      height: 30px;
+      background-color: #777;
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 6px;
     }
 
     .string {
       width: 4px;
-      height: 100px;
-      background: #999;
-      margin-top: -10px;
+      background: #aaa;
       position: relative;
-      cursor: pointer;
+      cursor: grab;
+      transition: height 0.2s;
     }
 
     .knob {
-      width: 14px;
-      height: 14px;
-      background: gold;
+      width: 16px;
+      height: 16px;
+      background: #555;
       border-radius: 50%;
       position: absolute;
-      bottom: 0;
-      left: -5px;
+      left: -6px;
+    }
+
+    body.day {
+      background-color: #fbe3a9;
     }
   </style>
 </head>
 <body>
-
-  <div class="lamp" id="lamp"></div>
-  <div class="string" onclick="toggleLamp()">
-    <div class="knob"></div>
+  <div class="container">
+    <div class="bulb" id="bulb">
+      <div class="socket"></div>
+    </div>
+    <div class="string" id="string" style="height: 120px;">
+      <div class="knob" id="knob" style="bottom: -8px;"></div>
+    </div>
   </div>
 
   <script>
-    const lamp = document.getElementById('lamp');
+    const bulb = document.getElementById('bulb');
+    const body = document.body;
+    const string = document.getElementById('string');
+    const knob = document.getElementById('knob');
+
+    let isDragging = false;
+    let startY = 0;
+    let maxPull = 80; // px
     let isOn = false;
 
-    function toggleLamp() {
-      isOn = !isOn;
-      lamp.classList.toggle('on', isOn);
-    }
-  </script>
+    string.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startY = e.clientY;
+      document.body.style.cursor = 'grabbing';
+    });
 
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dy = e.clientY - startY;
+      const pull = Math.min(Math.max(dy, 0), maxPull);
+      string.style.height = 120 + pull + "px";
+      knob.style.bottom = -8 - pull + "px";
+    });
+
+    window.addEventListener('mouseup', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      document.body.style.cursor = 'default';
+
+      const dy = e.clientY - startY;
+      if (dy > 50) {
+        isOn = !isOn;
+        bulb.classList.toggle('on', isOn);
+        body.classList.toggle('day', isOn);
+      }
+
+      // Reset string
+      string.style.height = "120px";
+      knob.style.bottom = "-8px";
+    });
+  </script>
 </body>
 </html>
