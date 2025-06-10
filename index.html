@@ -4,7 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pull String Lamp</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .lamp {
+      width: 100px;
+      height: 150px;
+      background: #333;
+      border-radius: 50% 50% 20% 20%;
+      position: relative;
+      box-shadow: 0 0 60px rgba(255, 255, 200, 0); /* Glow off */
+      transition: box-shadow 0.3s;
+    }
+
+    .lamp.on {
+      box-shadow: 0 0 80px rgba(255, 255, 180, 0.7); /* Glow on */
+    }
+
+    .string {
+      width: 4px;
+      height: 100px;
+      background: #999;
+      margin-top: -10px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .knob {
+      width: 14px;
+      height: 14px;
+      background: gold;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+      left: -5px;
+    }
+  </style>
 </head>
 <body>
 
@@ -13,6 +56,15 @@
     <div class="knob"></div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const lamp = document.getElementById('lamp');
+    let isOn = false;
+
+    function toggleLamp() {
+      isOn = !isOn;
+      lamp.classList.toggle('on', isOn);
+    }
+  </script>
+
 </body>
 </html>
